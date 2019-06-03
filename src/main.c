@@ -60,7 +60,24 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+uint8_t * payload;
+uint8_t mode = RECEIVER_MODE;
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == RF_IRQ_Pin && mode == RECEIVER_MODE)
+	{
+	HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
+	rf_clear_interrupt_flags();
+	read_payload();
 
+		for(int i =0; i < DIODES_NUMBER; i++)
+		{
+			set_diode_color(i, payload[1],payload[2], payload[3]);
+		}
+		send_data_to_spi();
+		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -101,7 +118,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
-	uint8_t mode = RECEIVER_MODE;
 	uint8_t * payload = get_payload();
 	rf_initialize(&hspi2, GPIOB, GPIO_PIN_12);
 	
@@ -110,6 +126,7 @@ int main(void)
 
 	if(mode == TRANSMITTER_MODE)
 	{
+		HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
 		configure_as_transmitter();
   while (1)
   {
@@ -144,24 +161,26 @@ int main(void)
 
 else
 	{
+		HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
 		configure_as_receiver();
+		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
+	rf_clear_interrupt_flags();
+	read_payload();
+	HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
   while (1)
   {
 		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
-	  HAL_Delay(800);
+	  HAL_Delay(1000);
 	HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
 	rf_clear_interrupt_flags();
+	if(status() & (1<<6))
 	read_payload();
-		
-		for(int i =0; i < DIODES_NUMBER; i++)
-		{
-			set_diode_color(i, payload[1],payload[2], payload[3]);
-		}
-			send_data_to_spi();
-		HAL_Delay(200);
-    /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+	for(int i =0; i < DIODES_NUMBER; i++)
+	{
+		set_diode_color(i, payload[1],payload[2], payload[3]);
+	}
+	send_data_to_spi();
   }
 }
 	

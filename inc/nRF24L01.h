@@ -71,5 +71,6 @@ void read_status_register(void);
 void write_payload_width(void);
 
 uint8_t * get_payload(void);
+uint8_t status(void);
 
 #endif

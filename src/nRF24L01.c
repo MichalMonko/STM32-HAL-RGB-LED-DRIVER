@@ -1,5 +1,6 @@
 #include "nRF24L01.h"
 
+uint8_t last_status_data;
 SPI_HandleTypeDef * spi;
 uint16_t gpio_chip_select;
 GPIO_TypeDef *gpio_handler;
@@ -160,13 +161,17 @@ void read_status_register(void) {
 	set_chip_select();
 }
 
+uint8_t status() {
+	return last_status_data;
+}
+
 void rf_clear_interrupt_flags(void) 
 {
 	//read_status_register
 	read_status_register();
-	uint8_t status_data = status_register[0];
-	HAL_Delay(1);
-	write_byte_to_register(RF_STATUS_REGISTER,status_data);
+	last_status_data = status_register[0];
+	//HAL_Delay(1);
+	write_byte_to_register(RF_STATUS_REGISTER,last_status_data);
 }
 
 void clear_chip_select(void)
