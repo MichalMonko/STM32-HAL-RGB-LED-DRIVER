@@ -82,8 +82,6 @@ void configure_as_receiver(void)
 	write_byte_to_register(RF_CONFIG_REGISTER, rf_configuration);
 	HAL_Delay(1);
 	
-	uint8_t config_register = read_register(0x00);
-
 	if(address_length == 5)
 	write_byte_to_register(RF_SETUP_AW_REGISTER, SETUP_AW_5_BYTES);
 	else if(address_length ==4)
@@ -97,7 +95,6 @@ void configure_as_receiver(void)
 	HAL_Delay(1);
 	write_payload_width();
 	HAL_Delay(1);
-	uint8_t payload_width = read_register(RF_RX_PW_P0);
 }
 
 void write_byte_to_register(uint8_t register_address, uint8_t data)
@@ -168,10 +165,10 @@ uint8_t status() {
 void rf_clear_interrupt_flags(void) 
 {
 	//read_status_register
-	read_status_register();
-	last_status_data = status_register[0];
+//	read_status_register();
+//	last_status_data = status_register[0];
 	//HAL_Delay(1);
-	write_byte_to_register(RF_STATUS_REGISTER,last_status_data);
+	write_byte_to_register(RF_STATUS_REGISTER,0xff);
 }
 
 void clear_chip_select(void)
@@ -204,4 +201,12 @@ void read_payload(void)
 uint8_t * get_payload()
 {
 	return payload;
+}
+
+void flush_rx()
+{
+	uint8_t data = RF_FLUSH_RX_COMMAND;
+	set_chip_select();
+	HAL_SPI_TransmitReceive(spi,&data,status_register,1,HAL_MAX_DELAY);
+	clear_chip_select();
 }

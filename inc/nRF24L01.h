@@ -33,6 +33,7 @@
 //Used to read status register as it 
 //is being tranmited on MISO when Master writes something on SPI
 #define NOP_COMMAND 0xff
+#define RF_FLUSH_RX_COMMAND 0xE3
 
 #define R_RX_PAYLOAD 0x61
 #define W_TX_PAYLOAD 0xA0
@@ -72,5 +73,7 @@ void write_payload_width(void);
 
 uint8_t * get_payload(void);
 uint8_t status(void);
+
+void flush_rx(void);
 
 #endif
