@@ -78,8 +78,12 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(RF_CHIP_ENABLE_GPIO_Port, &GPIO_InitStruct);
 
+  //Konfiguracja przetwornika ADC
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
   HAL_NVIC_SetPriority(EXTI9_5_IRQn,0,0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 

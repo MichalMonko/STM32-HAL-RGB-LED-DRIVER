@@ -41,7 +41,7 @@
 #define FLUSH_RX 0xE2
 #define FLUSH_TX 0xE1
 
-#define PAYLOAD_SIZE 3
+#define PAYLOAD_SIZE 5
 
 void rf_initialize(SPI_HandleTypeDef * spi_handler,GPIO_TypeDef * gpio, uint16_t chip_select_pin);
 void rf_init(void);

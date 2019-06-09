@@ -56,7 +56,8 @@ src/main.o: ../src/main.c \
  /home/warchlak/eclipse-workbench/HelloWorld/inc/gpio.h \
  /home/warchlak/eclipse-workbench/HelloWorld/inc/ws2812b.h \
  /home/warchlak/eclipse-workbench/HelloWorld/inc/nRF24L01.h \
- /home/warchlak/eclipse-workbench/HelloWorld/inc/spi.h
+ /home/warchlak/eclipse-workbench/HelloWorld/inc/spi.h \
+ /home/warchlak/eclipse-workbench/HelloWorld/inc/hue.h
 
 /home/warchlak/eclipse-workbench/HelloWorld/inc/main.h:
 
@@ -173,3 +174,5 @@ src/main.o: ../src/main.c \
 /home/warchlak/eclipse-workbench/HelloWorld/inc/nRF24L01.h:
 
 /home/warchlak/eclipse-workbench/HelloWorld/inc/spi.h:
+
+/home/warchlak/eclipse-workbench/HelloWorld/inc/hue.h:

@@ -8,9 +8,9 @@ GPIO_TypeDef *gpio_handler;
 uint8_t rf_configuration = 0x08;
 //Only first byte matters
 uint8_t status_register[2];
-uint8_t payload[PAYLOAD_SIZE + 1] = {0x00,0xff,0xff,0xff};
-uint8_t dump_data[PAYLOAD_SIZE + 1] = {0x00,0x00,0x00,0x00};
-uint8_t address[5] = {0xff,0xff,0xff,0x00,0x00};
+uint8_t payload[PAYLOAD_SIZE + 1];
+uint8_t dump_data[PAYLOAD_SIZE + 1];
+//uint8_t address[5] = {0xff,0xff,0xff,0x00,0x00};
 uint8_t address_length = 5;
 
 uint8_t address_tx_write_command[6] = {0x30,0x00,0x00,0x00,0x00,0x00};
@@ -167,7 +167,7 @@ void rf_clear_interrupt_flags(void)
 	//read_status_register
 //	read_status_register();
 //	last_status_data = status_register[0];
-	//HAL_Delay(1);
+	HAL_Delay(1);
 	write_byte_to_register(RF_STATUS_REGISTER,0xff);
 }
 
@@ -191,7 +191,6 @@ void write_payload(void)
 
 void read_payload(void)
 {
-	HAL_Delay(1);
 	dump_data[0] = R_RX_PAYLOAD;
 	clear_chip_select();
 	HAL_SPI_TransmitReceive(spi,dump_data,payload,sizeof(payload),HAL_MAX_DELAY);
