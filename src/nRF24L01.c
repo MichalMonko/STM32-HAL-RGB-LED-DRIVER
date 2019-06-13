@@ -16,6 +16,9 @@ uint8_t address_length = 5;
 uint8_t address_tx_write_command[6] = {0x30,0x00,0x00,0x00,0x00,0x00};
 uint8_t address_rx_write_command[6] = {0x2A,0x00,0x00,0x00,0x00,0x00};
 
+uint8_t address_tx_write_shutter_command[6] = {0x30,0x0a,0x0a,0x06,0x06,0x06};
+uint8_t address_rx_write_shutter_command[6] = {0x2A,0x0a,0x0a,0x06,0x06,0x06};
+
 void rf_initialize(SPI_HandleTypeDef * spi_handler,GPIO_TypeDef * gpio, uint16_t chip_select_pin)
 {
 	spi = spi_handler;
@@ -130,6 +133,15 @@ void rf_initialize_address(uint8_t *address, uint8_t address_length)
 	}
 }
 
+void rf_initialize_shutter_address(uint8_t *address, uint8_t address_length)
+{
+	for(uint8_t i = 1; i <= address_length; i++)
+	{
+		address_rx_write_shutter_command[i] = address[i-1];
+		address_tx_write_shutter_command[i] = address[i-1];
+	}
+}
+
 void write_rx_address()
 {
 	clear_chip_select();
@@ -141,6 +153,20 @@ void write_tx_address()
 {
 	clear_chip_select();
 	HAL_SPI_Transmit(spi,address_tx_write_command, address_length + 1,HAL_MAX_DELAY);
+	set_chip_select();
+}
+
+void write_rx_shutter_address()
+{
+	clear_chip_select();
+	HAL_SPI_Transmit(spi,address_rx_write_shutter_command, address_length + 1,HAL_MAX_DELAY);
+	set_chip_select();
+}
+
+void write_tx_shutter_address()
+{
+	clear_chip_select();
+	HAL_SPI_Transmit(spi,address_tx_write_shutter_command, address_length + 1,HAL_MAX_DELAY);
 	set_chip_select();
 }
 
@@ -164,11 +190,10 @@ uint8_t status() {
 
 void rf_clear_interrupt_flags(void) 
 {
-	//read_status_register
-//	read_status_register();
-//	last_status_data = status_register[0];
 	HAL_Delay(1);
 	write_byte_to_register(RF_STATUS_REGISTER,0xff);
+	flush_rx();
+	flush_tx();
 }
 
 void clear_chip_select(void)
@@ -208,4 +233,19 @@ void flush_rx()
 	set_chip_select();
 	HAL_SPI_TransmitReceive(spi,&data,status_register,1,HAL_MAX_DELAY);
 	clear_chip_select();
+}
+
+void flush_tx()
+{
+	uint8_t data = RF_FLUSH_TX_COMMAND;
+	set_chip_select();
+	HAL_SPI_TransmitReceive(spi,&data,status_register,1,HAL_MAX_DELAY);
+	clear_chip_select();
+}
+
+uint8_t isSendSuccess()
+{
+	read_status_register();
+	uint8_t status = status_register[0];
+	return (status & TX_DS_BIT) && !(status & MAX_RT_BIT);
 }

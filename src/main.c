@@ -62,16 +62,58 @@ void ADC_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+struct PointRGB{
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t isSet;
+};
+
+struct ColorInterpolationConfig {
+	uint32_t time;
+	uint32_t timeStep;
+	uint8_t colorStep;
+} colorInterpolation;
+
+uint8_t calculateLightness(uint32_t reading)
+{
+	float calculatedValue = 0.3643f * reading - 109.2857f;
+	if (calculatedValue >= 240.0f)
+	{
+		return 200;
+	}
+	else if(calculatedValue <= 0.0f)
+	{
+		return 0;
+	}
+	return (uint8_t) calculatedValue;
+}
+
+uint8_t calculateShutterPos(uint32_t reading)
+{
+	float calculatedValue = 0.1111111f * reading - 11.1111111f;
+	if (calculatedValue >= 100.0f)
+	{
+		return 100;
+	}
+	else if(calculatedValue <= 0.0f)
+	{
+		return 0;
+	}
+	return (uint8_t) calculatedValue;
+}
+
+void set_point(struct PointRGB rgb,uint8_t R,uint8_t G,uint8_t B)
+{
+	rgb.r = R; rgb.g = G; rgb.b = B;
+}
+
 uint8_t * payload;
-uint8_t mode = TRANSMITTER_MODE;
+uint8_t mode = RECEIVER_MODE;
 uint8_t data_ready = 0;
-float threshold = 0.2;
-float last_lightness = 0.0f;
 u_int32_t lower_limit = 100;
 u_int32_t upper_limit = 400;
-u_int32_t reading;
-
-struct HSL hsl;
 
 ADC_HandleTypeDef adc;
 
@@ -82,16 +124,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		data_ready = 1;
 	}
 }
-
-float saturated_relu(u_int32_t x,uint32_t lower_limit, uint32_t upper_limit)
-{
-	if(x <= lower_limit) return 0.0f;
-	if(x >= upper_limit) return 1.0f;
-	float a = 1.0f/(upper_limit - lower_limit);
-	float b = -a * lower_limit;
-	return a*x + b;
-
-}
 /* USER CODE END 0 */
 
 /**
@@ -100,9 +132,9 @@ float saturated_relu(u_int32_t x,uint32_t lower_limit, uint32_t upper_limit)
   */
 int main(void)
 {
-	hsl.H = 65;
-	hsl.S = 1.0f;
-	hsl.L = 1.0f;
+//	hsl.H = 65;
+//	hsl.S = 1.0f;
+//	hsl.L = 1.0f;
 
   /* USER CODE BEGIN 1 */
 
@@ -148,26 +180,51 @@ int main(void)
 		HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
 		configure_as_transmitter();
 		HAL_ADC_Start(&adc);
-		reading = HAL_ADC_GetValue(&adc);
-		last_lightness = saturated_relu(reading, lower_limit, upper_limit);
+		payload[1] = 0x00; payload[2] = 0x00;
+		uint32_t delay;
   while (1)
   {
-		HAL_Delay(200);
-		uint32_t reading = HAL_ADC_GetValue(&adc);
-//		float lightness = saturated_relu(reading,lower_limit,upper_limit);
-		float lightness = 0.0f;
-		if(reading > upper_limit) lightness = 0.6f;
+		write_tx_address();
+		write_rx_address();
 
-		last_lightness = lightness;
-		hsl.L = lightness;
-		struct RGB rgb = HSLToRGB(hsl);
-		payload[1] = 0x00; payload[2] = 0x00; payload[3] = rgb.R; payload[4] = rgb.G; payload[5] = rgb.B;
+		uint32_t reading = HAL_ADC_GetValue(&adc);
+		uint8_t color = calculateLightness(reading);
+		if(color && color < 20)
+			color = 20;
+
+		payload[3] = color;
+		payload[4] = color;
+		payload[5] = color;
+
 		write_payload();
 
 		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
 		HAL_Delay(1);
 		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
+
+		delay = isSendSuccess() ? 1000 : 1000;
 		rf_clear_interrupt_flags();
+		HAL_Delay(delay);
+
+
+		write_tx_shutter_address();
+		write_rx_shutter_address();
+
+		reading = HAL_ADC_GetValue(&adc);
+		uint8_t shutterPosition = calculateShutterPos(reading);
+
+		payload[0] = 1;
+		payload[1] = shutterPosition;
+
+		write_payload();
+
+		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
+		HAL_Delay(1);
+		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
+
+		delay = isSendSuccess() ? 1000:1000;
+		rf_clear_interrupt_flags();
+		HAL_Delay(delay);
 	}
 }
 
@@ -177,6 +234,7 @@ else
 	HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
 	rf_clear_interrupt_flags();
 	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
   while (1)
   {
 	  if(data_ready)
@@ -186,11 +244,12 @@ else
 			read_payload();
 			rf_clear_interrupt_flags();
 
-			for(int i =0; i < DIODES_NUMBER; i++)
-			{
-				set_diode_color(i, payload[3],payload[4] , payload[5] );
+				for(int i =0; i < DIODES_NUMBER; i++)
+				{
+					set_diode_color(i, payload[3],payload[4] , payload[5] );
+				}
+				send_data_to_spi();
 			}
-			send_data_to_spi();
 			HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
 			data_ready = 0;
 			HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
@@ -199,7 +258,6 @@ else
 }
 	
   /* USER CODE END 3 */
-}
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -209,7 +267,7 @@ void ADC_Config(void)
 	__HAL_RCC_ADC1_CLK_ENABLE();
 	RCC_PeriphCLKInitTypeDef clock_init;
 	clock_init.PeriphClockSelection = RCC_PERIPHCLK_ADC;
-	clock_init.AdcClockSelection = RCC_ADCPCLK2_DIV2;
+	clock_init.AdcClockSelection = RCC_ADCPCLK2_DIV8;
 	HAL_RCCEx_PeriphCLKConfig(&clock_init);
 
 	adc.Instance = ADC1;

@@ -31,15 +31,14 @@
 #define MAX_RT_BIT 0x04
 
 //Used to read status register as it 
-//is being tranmited on MISO when Master writes something on SPI
+//is being transmited on MISO when Master writes something on SPI
 #define NOP_COMMAND 0xff
-#define RF_FLUSH_RX_COMMAND 0xE3
+#define RF_FLUSH_RX_COMMAND 0xE2
+#define RF_FLUSH_TX_COMMAND 0xE1
 
 #define R_RX_PAYLOAD 0x61
 #define W_TX_PAYLOAD 0xA0
 #define R_TX_PAYLOAD_NOACK 0xB0 //No ACK
-#define FLUSH_RX 0xE2
-#define FLUSH_TX 0xE1
 
 #define PAYLOAD_SIZE 5
 
@@ -75,5 +74,11 @@ uint8_t * get_payload(void);
 uint8_t status(void);
 
 void flush_rx(void);
+void flush_tx(void);
+
+void write_tx_shutter_address(void);
+void write_rx_shutter_address(void);
+
+uint8_t isSendSuccess(void);
 
 #endif

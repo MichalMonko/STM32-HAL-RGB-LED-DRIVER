@@ -48,11 +48,10 @@ __lock___sinit_recursive_mutex
                     0x1               /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
 __lock___malloc_recursive_mutex
                     0x1               /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
-reading             0x4               src/main.o
 gpio_chip_select    0x2               src/nRF24L01.o
 adc                 0x30              src/main.o
-hsl                 0xc               src/main.o
 diodes_colors       0x18              src/ws2812b.o
+colorInterpolation  0xc               src/main.o
 status_register     0x2               src/nRF24L01.o
 gpio_handler        0x4               src/nRF24L01.o
 payload             0x6               src/nRF24L01.o
@@ -9171,6 +9170,13 @@ Discarded input sections
  .group         0x0000000000000000        0xc src/main.o
  .group         0x0000000000000000        0xc src/main.o
  .text          0x0000000000000000        0x0 src/main.o
+ .data          0x0000000000000000        0x8 src/main.o
+ .text.HueToRGB
+                0x0000000000000000      0x114 src/main.o
+ .text.HSLToRGB
+                0x0000000000000000      0x17c src/main.o
+ .text.set_point
+                0x0000000000000000       0x30 src/main.o
  .debug_macro   0x0000000000000000      0xa6c src/main.o
  .debug_macro   0x0000000000000000      0x224 src/main.o
  .debug_macro   0x0000000000000000       0x28 src/main.o
@@ -9326,9 +9332,9 @@ Discarded input sections
                 0x0000000000000000       0x3c src/nRF24L01.o
  .text.read_register
                 0x0000000000000000       0x44 src/nRF24L01.o
+ .text.rf_initialize_shutter_address
+                0x0000000000000000       0x54 src/nRF24L01.o
  .text.status   0x0000000000000000       0x14 src/nRF24L01.o
- .text.flush_rx
-                0x0000000000000000       0x38 src/nRF24L01.o
  .debug_macro   0x0000000000000000      0xa6c src/nRF24L01.o
  .debug_macro   0x0000000000000000      0x224 src/nRF24L01.o
  .debug_macro   0x0000000000000000       0x28 src/nRF24L01.o
@@ -9403,7 +9409,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000      0x26c src/nRF24L01.o
  .debug_macro   0x0000000000000000       0x83 src/nRF24L01.o
  .debug_macro   0x0000000000000000       0x40 src/nRF24L01.o
- .debug_macro   0x0000000000000000       0xac src/nRF24L01.o
+ .debug_macro   0x0000000000000000       0xa6 src/nRF24L01.o
  .group         0x0000000000000000        0xc src/spi.o
  .group         0x0000000000000000        0xc src/spi.o
  .group         0x0000000000000000        0xc src/spi.o
@@ -10305,7 +10311,7 @@ LOAD /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1
                 0x0000000008000000                g_pfnVectors
                 0x0000000008000130                . = ALIGN (0x4)
 
-.text           0x0000000008000130     0x3cc0
+.text           0x0000000008000130     0x3b98
                 0x0000000008000130                . = ALIGN (0x4)
  *(.text)
  .text          0x0000000008000130       0x40 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
@@ -10485,294 +10491,305 @@ LOAD /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1
  .text.MX_GPIO_Init
                 0x0000000008002a7c      0x130 src/gpio.o
                 0x0000000008002a7c                MX_GPIO_Init
- .text.HueToRGB
-                0x0000000008002bac      0x114 src/main.o
-                0x0000000008002bac                HueToRGB
- .text.HSLToRGB
-                0x0000000008002cc0      0x17c src/main.o
-                0x0000000008002cc0                HSLToRGB
+ .text.calculateLightness
+                0x0000000008002bac       0x6c src/main.o
+                0x0000000008002bac                calculateLightness
+ .text.calculateShutterPos
+                0x0000000008002c18       0x6c src/main.o
+                0x0000000008002c18                calculateShutterPos
  .text.HAL_GPIO_EXTI_Callback
-                0x0000000008002e3c       0x34 src/main.o
-                0x0000000008002e3c                HAL_GPIO_EXTI_Callback
- .text.saturated_relu
-                0x0000000008002e70       0x82 src/main.o
-                0x0000000008002e70                saturated_relu
- *fill*         0x0000000008002ef2        0x2 
- .text.main     0x0000000008002ef4      0x20c src/main.o
-                0x0000000008002ef4                main
+                0x0000000008002c84       0x34 src/main.o
+                0x0000000008002c84                HAL_GPIO_EXTI_Callback
+ .text.main     0x0000000008002cb8      0x204 src/main.o
+                0x0000000008002cb8                main
  .text.ADC_Config
-                0x0000000008003100       0x98 src/main.o
-                0x0000000008003100                ADC_Config
+                0x0000000008002ebc       0x9c src/main.o
+                0x0000000008002ebc                ADC_Config
  .text.SystemClock_Config
-                0x0000000008003198       0x80 src/main.o
-                0x0000000008003198                SystemClock_Config
+                0x0000000008002f58       0x80 src/main.o
+                0x0000000008002f58                SystemClock_Config
  .text.Error_Handler
-                0x0000000008003218        0xc src/main.o
-                0x0000000008003218                Error_Handler
+                0x0000000008002fd8        0xc src/main.o
+                0x0000000008002fd8                Error_Handler
  .text.rf_initialize
-                0x0000000008003224       0x38 src/nRF24L01.o
-                0x0000000008003224                rf_initialize
+                0x0000000008002fe4       0x38 src/nRF24L01.o
+                0x0000000008002fe4                rf_initialize
  .text.rf_set_receiver
-                0x000000000800325c       0x34 src/nRF24L01.o
-                0x000000000800325c                rf_set_receiver
+                0x000000000800301c       0x34 src/nRF24L01.o
+                0x000000000800301c                rf_set_receiver
  .text.rf_set_power_up
-                0x0000000008003290       0x3c src/nRF24L01.o
-                0x0000000008003290                rf_set_power_up
+                0x0000000008003050       0x3c src/nRF24L01.o
+                0x0000000008003050                rf_set_power_up
  .text.configure_as_transmitter
-                0x00000000080032cc       0x88 src/nRF24L01.o
-                0x00000000080032cc                configure_as_transmitter
+                0x000000000800308c       0x88 src/nRF24L01.o
+                0x000000000800308c                configure_as_transmitter
  .text.configure_as_receiver
-                0x0000000008003354       0x84 src/nRF24L01.o
-                0x0000000008003354                configure_as_receiver
+                0x0000000008003114       0x84 src/nRF24L01.o
+                0x0000000008003114                configure_as_receiver
  .text.write_byte_to_register
-                0x00000000080033d8       0x4c src/nRF24L01.o
-                0x00000000080033d8                write_byte_to_register
+                0x0000000008003198       0x4c src/nRF24L01.o
+                0x0000000008003198                write_byte_to_register
  .text.rf_initialize_address
-                0x0000000008003424       0x54 src/nRF24L01.o
-                0x0000000008003424                rf_initialize_address
+                0x00000000080031e4       0x54 src/nRF24L01.o
+                0x00000000080031e4                rf_initialize_address
  .text.write_rx_address
-                0x0000000008003478       0x34 src/nRF24L01.o
-                0x0000000008003478                write_rx_address
+                0x0000000008003238       0x34 src/nRF24L01.o
+                0x0000000008003238                write_rx_address
  .text.write_tx_address
-                0x00000000080034ac       0x34 src/nRF24L01.o
-                0x00000000080034ac                write_tx_address
+                0x000000000800326c       0x34 src/nRF24L01.o
+                0x000000000800326c                write_tx_address
+ .text.write_rx_shutter_address
+                0x00000000080032a0       0x34 src/nRF24L01.o
+                0x00000000080032a0                write_rx_shutter_address
+ .text.write_tx_shutter_address
+                0x00000000080032d4       0x34 src/nRF24L01.o
+                0x00000000080032d4                write_tx_shutter_address
  .text.write_payload_width
-                0x00000000080034e0       0x10 src/nRF24L01.o
-                0x00000000080034e0                write_payload_width
+                0x0000000008003308       0x10 src/nRF24L01.o
+                0x0000000008003308                write_payload_width
  .text.read_status_register
-                0x00000000080034f0       0x38 src/nRF24L01.o
-                0x00000000080034f0                read_status_register
+                0x0000000008003318       0x38 src/nRF24L01.o
+                0x0000000008003318                read_status_register
  .text.rf_clear_interrupt_flags
-                0x0000000008003528       0x16 src/nRF24L01.o
-                0x0000000008003528                rf_clear_interrupt_flags
- *fill*         0x000000000800353e        0x2 
+                0x0000000008003350       0x1e src/nRF24L01.o
+                0x0000000008003350                rf_clear_interrupt_flags
+ *fill*         0x000000000800336e        0x2 
  .text.clear_chip_select
-                0x0000000008003540       0x20 src/nRF24L01.o
-                0x0000000008003540                clear_chip_select
+                0x0000000008003370       0x20 src/nRF24L01.o
+                0x0000000008003370                clear_chip_select
  .text.set_chip_select
-                0x0000000008003560       0x20 src/nRF24L01.o
-                0x0000000008003560                set_chip_select
+                0x0000000008003390       0x20 src/nRF24L01.o
+                0x0000000008003390                set_chip_select
  .text.write_payload
-                0x0000000008003580       0x40 src/nRF24L01.o
-                0x0000000008003580                write_payload
+                0x00000000080033b0       0x40 src/nRF24L01.o
+                0x00000000080033b0                write_payload
  .text.read_payload
-                0x00000000080035c0       0x3c src/nRF24L01.o
-                0x00000000080035c0                read_payload
+                0x00000000080033f0       0x3c src/nRF24L01.o
+                0x00000000080033f0                read_payload
  .text.get_payload
-                0x00000000080035fc       0x14 src/nRF24L01.o
-                0x00000000080035fc                get_payload
+                0x000000000800342c       0x14 src/nRF24L01.o
+                0x000000000800342c                get_payload
+ .text.flush_rx
+                0x0000000008003440       0x38 src/nRF24L01.o
+                0x0000000008003440                flush_rx
+ .text.flush_tx
+                0x0000000008003478       0x38 src/nRF24L01.o
+                0x0000000008003478                flush_tx
+ .text.isSendSuccess
+                0x00000000080034b0       0x38 src/nRF24L01.o
+                0x00000000080034b0                isSendSuccess
  .text.MX_SPI1_Init
-                0x0000000008003610       0x6c src/spi.o
-                0x0000000008003610                MX_SPI1_Init
+                0x00000000080034e8       0x6c src/spi.o
+                0x00000000080034e8                MX_SPI1_Init
  .text.MX_SPI2_Init
-                0x000000000800367c       0x6c src/spi.o
-                0x000000000800367c                MX_SPI2_Init
+                0x0000000008003554       0x6c src/spi.o
+                0x0000000008003554                MX_SPI2_Init
  .text.HAL_SPI_MspInit
-                0x00000000080036e8      0x14c src/spi.o
-                0x00000000080036e8                HAL_SPI_MspInit
+                0x00000000080035c0      0x14c src/spi.o
+                0x00000000080035c0                HAL_SPI_MspInit
  .text.SysTick_Handler
-                0x0000000008003834       0x10 src/stm32f1xx_it.o
-                0x0000000008003834                SysTick_Handler
+                0x000000000800370c       0x10 src/stm32f1xx_it.o
+                0x000000000800370c                SysTick_Handler
  .text.EXTI9_5_IRQHandler
-                0x0000000008003844       0x10 src/stm32f1xx_it.o
-                0x0000000008003844                EXTI9_5_IRQHandler
+                0x000000000800371c       0x10 src/stm32f1xx_it.o
+                0x000000000800371c                EXTI9_5_IRQHandler
  .text.SystemInit
-                0x0000000008003854       0x68 src/system_stm32f1xx.o
-                0x0000000008003854                SystemInit
+                0x000000000800372c       0x68 src/system_stm32f1xx.o
+                0x000000000800372c                SystemInit
  .text.init_spi
-                0x00000000080038bc       0x1c src/ws2812b.o
-                0x00000000080038bc                init_spi
+                0x0000000008003794       0x1c src/ws2812b.o
+                0x0000000008003794                init_spi
  .text.set_diode_color
-                0x00000000080038d8       0x68 src/ws2812b.o
-                0x00000000080038d8                set_diode_color
+                0x00000000080037b0       0x68 src/ws2812b.o
+                0x00000000080037b0                set_diode_color
  .text.send_data_to_spi
-                0x0000000008003940       0x24 src/ws2812b.o
-                0x0000000008003940                send_data_to_spi
+                0x0000000008003818       0x24 src/ws2812b.o
+                0x0000000008003818                send_data_to_spi
  .text.encode_diodes
-                0x0000000008003964      0x228 src/ws2812b.o
-                0x0000000008003964                encode_diodes
+                0x000000000800383c      0x228 src/ws2812b.o
+                0x000000000800383c                encode_diodes
  .text.Reset_Handler
-                0x0000000008003b8c       0x50 startup/startup_stm32.o
-                0x0000000008003b8c                Reset_Handler
+                0x0000000008003a64       0x50 startup/startup_stm32.o
+                0x0000000008003a64                Reset_Handler
  .text.Default_Handler
-                0x0000000008003bdc        0x2 startup/startup_stm32.o
-                0x0000000008003bdc                EXTI2_IRQHandler
-                0x0000000008003bdc                TIM8_TRG_COM_IRQHandler
-                0x0000000008003bdc                TIM8_CC_IRQHandler
-                0x0000000008003bdc                DebugMon_Handler
-                0x0000000008003bdc                TIM1_CC_IRQHandler
-                0x0000000008003bdc                HardFault_Handler
-                0x0000000008003bdc                TIM6_IRQHandler
-                0x0000000008003bdc                PVD_IRQHandler
-                0x0000000008003bdc                SDIO_IRQHandler
-                0x0000000008003bdc                PendSV_Handler
-                0x0000000008003bdc                NMI_Handler
-                0x0000000008003bdc                EXTI3_IRQHandler
-                0x0000000008003bdc                USB_HP_CAN_TX_IRQHandler
-                0x0000000008003bdc                EXTI0_IRQHandler
-                0x0000000008003bdc                I2C2_EV_IRQHandler
-                0x0000000008003bdc                UsageFault_Handler
-                0x0000000008003bdc                ADC1_2_IRQHandler
-                0x0000000008003bdc                SPI1_IRQHandler
-                0x0000000008003bdc                CAN_SCE_IRQHandler
-                0x0000000008003bdc                TAMPER_IRQHandler
-                0x0000000008003bdc                TIM8_UP_IRQHandler
-                0x0000000008003bdc                DMA2_Channel2_IRQHandler
-                0x0000000008003bdc                DMA1_Channel4_IRQHandler
-                0x0000000008003bdc                USART3_IRQHandler
-                0x0000000008003bdc                RTC_IRQHandler
-                0x0000000008003bdc                DMA1_Channel7_IRQHandler
-                0x0000000008003bdc                UART5_IRQHandler
-                0x0000000008003bdc                ADC3_IRQHandler
-                0x0000000008003bdc                TIM4_IRQHandler
-                0x0000000008003bdc                CAN_RX1_IRQHandler
-                0x0000000008003bdc                DMA2_Channel1_IRQHandler
-                0x0000000008003bdc                I2C1_EV_IRQHandler
-                0x0000000008003bdc                DMA1_Channel6_IRQHandler
-                0x0000000008003bdc                UART4_IRQHandler
-                0x0000000008003bdc                TIM3_IRQHandler
-                0x0000000008003bdc                RCC_IRQHandler
-                0x0000000008003bdc                TIM1_TRG_COM_IRQHandler
-                0x0000000008003bdc                DMA1_Channel1_IRQHandler
-                0x0000000008003bdc                Default_Handler
-                0x0000000008003bdc                EXTI15_10_IRQHandler
-                0x0000000008003bdc                TIM7_IRQHandler
-                0x0000000008003bdc                TIM5_IRQHandler
-                0x0000000008003bdc                SPI2_IRQHandler
-                0x0000000008003bdc                USB_LP_CAN_RX0_IRQHandler
-                0x0000000008003bdc                MemManage_Handler
-                0x0000000008003bdc                SVC_Handler
-                0x0000000008003bdc                DMA1_Channel5_IRQHandler
-                0x0000000008003bdc                EXTI4_IRQHandler
-                0x0000000008003bdc                DMA1_Channel3_IRQHandler
-                0x0000000008003bdc                FSMC_IRQHandler
-                0x0000000008003bdc                TIM1_UP_IRQHandler
-                0x0000000008003bdc                WWDG_IRQHandler
-                0x0000000008003bdc                TIM2_IRQHandler
-                0x0000000008003bdc                TIM1_BRK_IRQHandler
-                0x0000000008003bdc                EXTI1_IRQHandler
-                0x0000000008003bdc                RTCAlarm_IRQHandler
-                0x0000000008003bdc                DMA2_Channel4_5_IRQHandler
-                0x0000000008003bdc                USART2_IRQHandler
-                0x0000000008003bdc                I2C2_ER_IRQHandler
-                0x0000000008003bdc                DMA1_Channel2_IRQHandler
-                0x0000000008003bdc                TIM8_BRK_IRQHandler
-                0x0000000008003bdc                FLASH_IRQHandler
-                0x0000000008003bdc                BusFault_Handler
-                0x0000000008003bdc                USART1_IRQHandler
-                0x0000000008003bdc                SPI3_IRQHandler
-                0x0000000008003bdc                I2C1_ER_IRQHandler
-                0x0000000008003bdc                DMA2_Channel3_IRQHandler
- *fill*         0x0000000008003bde        0x2 
+                0x0000000008003ab4        0x2 startup/startup_stm32.o
+                0x0000000008003ab4                EXTI2_IRQHandler
+                0x0000000008003ab4                TIM8_TRG_COM_IRQHandler
+                0x0000000008003ab4                TIM8_CC_IRQHandler
+                0x0000000008003ab4                DebugMon_Handler
+                0x0000000008003ab4                TIM1_CC_IRQHandler
+                0x0000000008003ab4                HardFault_Handler
+                0x0000000008003ab4                TIM6_IRQHandler
+                0x0000000008003ab4                PVD_IRQHandler
+                0x0000000008003ab4                SDIO_IRQHandler
+                0x0000000008003ab4                PendSV_Handler
+                0x0000000008003ab4                NMI_Handler
+                0x0000000008003ab4                EXTI3_IRQHandler
+                0x0000000008003ab4                USB_HP_CAN_TX_IRQHandler
+                0x0000000008003ab4                EXTI0_IRQHandler
+                0x0000000008003ab4                I2C2_EV_IRQHandler
+                0x0000000008003ab4                UsageFault_Handler
+                0x0000000008003ab4                ADC1_2_IRQHandler
+                0x0000000008003ab4                SPI1_IRQHandler
+                0x0000000008003ab4                CAN_SCE_IRQHandler
+                0x0000000008003ab4                TAMPER_IRQHandler
+                0x0000000008003ab4                TIM8_UP_IRQHandler
+                0x0000000008003ab4                DMA2_Channel2_IRQHandler
+                0x0000000008003ab4                DMA1_Channel4_IRQHandler
+                0x0000000008003ab4                USART3_IRQHandler
+                0x0000000008003ab4                RTC_IRQHandler
+                0x0000000008003ab4                DMA1_Channel7_IRQHandler
+                0x0000000008003ab4                UART5_IRQHandler
+                0x0000000008003ab4                ADC3_IRQHandler
+                0x0000000008003ab4                TIM4_IRQHandler
+                0x0000000008003ab4                CAN_RX1_IRQHandler
+                0x0000000008003ab4                DMA2_Channel1_IRQHandler
+                0x0000000008003ab4                I2C1_EV_IRQHandler
+                0x0000000008003ab4                DMA1_Channel6_IRQHandler
+                0x0000000008003ab4                UART4_IRQHandler
+                0x0000000008003ab4                TIM3_IRQHandler
+                0x0000000008003ab4                RCC_IRQHandler
+                0x0000000008003ab4                TIM1_TRG_COM_IRQHandler
+                0x0000000008003ab4                DMA1_Channel1_IRQHandler
+                0x0000000008003ab4                Default_Handler
+                0x0000000008003ab4                EXTI15_10_IRQHandler
+                0x0000000008003ab4                TIM7_IRQHandler
+                0x0000000008003ab4                TIM5_IRQHandler
+                0x0000000008003ab4                SPI2_IRQHandler
+                0x0000000008003ab4                USB_LP_CAN_RX0_IRQHandler
+                0x0000000008003ab4                MemManage_Handler
+                0x0000000008003ab4                SVC_Handler
+                0x0000000008003ab4                DMA1_Channel5_IRQHandler
+                0x0000000008003ab4                EXTI4_IRQHandler
+                0x0000000008003ab4                DMA1_Channel3_IRQHandler
+                0x0000000008003ab4                FSMC_IRQHandler
+                0x0000000008003ab4                TIM1_UP_IRQHandler
+                0x0000000008003ab4                WWDG_IRQHandler
+                0x0000000008003ab4                TIM2_IRQHandler
+                0x0000000008003ab4                TIM1_BRK_IRQHandler
+                0x0000000008003ab4                EXTI1_IRQHandler
+                0x0000000008003ab4                RTCAlarm_IRQHandler
+                0x0000000008003ab4                DMA2_Channel4_5_IRQHandler
+                0x0000000008003ab4                USART2_IRQHandler
+                0x0000000008003ab4                I2C2_ER_IRQHandler
+                0x0000000008003ab4                DMA1_Channel2_IRQHandler
+                0x0000000008003ab4                TIM8_BRK_IRQHandler
+                0x0000000008003ab4                FLASH_IRQHandler
+                0x0000000008003ab4                BusFault_Handler
+                0x0000000008003ab4                USART1_IRQHandler
+                0x0000000008003ab4                SPI3_IRQHandler
+                0x0000000008003ab4                I2C1_ER_IRQHandler
+                0x0000000008003ab4                DMA2_Channel3_IRQHandler
+ *fill*         0x0000000008003ab6        0x2 
  .text.__libc_init_array
-                0x0000000008003be0       0x48 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-init.o)
-                0x0000000008003be0                __libc_init_array
- .text.memset   0x0000000008003c28       0x94 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-memset.o)
-                0x0000000008003c28                memset
+                0x0000000008003ab8       0x48 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-init.o)
+                0x0000000008003ab8                __libc_init_array
+ .text.memset   0x0000000008003b00       0x94 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-memset.o)
+                0x0000000008003b00                memset
  .text.startup.register_fini
-                0x0000000008003cbc       0x14 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__call_atexit.o)
- .text.atexit   0x0000000008003cd0        0xc /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-atexit.o)
-                0x0000000008003cd0                atexit
+                0x0000000008003b94       0x14 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__call_atexit.o)
+ .text.atexit   0x0000000008003ba8        0xc /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-atexit.o)
+                0x0000000008003ba8                atexit
  .text.__libc_fini_array
-                0x0000000008003cdc       0x34 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-fini.o)
-                0x0000000008003cdc                __libc_fini_array
+                0x0000000008003bb4       0x34 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-fini.o)
+                0x0000000008003bb4                __libc_fini_array
  .text.__retarget_lock_acquire_recursive
-                0x0000000008003d10        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
-                0x0000000008003d10                __retarget_lock_acquire_recursive
+                0x0000000008003be8        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
+                0x0000000008003be8                __retarget_lock_acquire_recursive
  .text.__retarget_lock_release_recursive
-                0x0000000008003d14        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
-                0x0000000008003d14                __retarget_lock_release_recursive
+                0x0000000008003bec        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
+                0x0000000008003bec                __retarget_lock_release_recursive
  .text.__register_exitproc
-                0x0000000008003d18       0xc0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__atexit.o)
-                0x0000000008003d18                __register_exitproc
+                0x0000000008003bf0       0xc0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__atexit.o)
+                0x0000000008003bf0                __register_exitproc
  *(.glue_7)
- .glue_7        0x0000000008003dd8        0x0 linker stubs
+ .glue_7        0x0000000008003cb0        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x0000000008003dd8        0x0 linker stubs
+ .glue_7t       0x0000000008003cb0        0x0 linker stubs
  *(.eh_frame)
- .eh_frame      0x0000000008003dd8        0x0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
+ .eh_frame      0x0000000008003cb0        0x0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
  *(.init)
- .init          0x0000000008003dd8        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crti.o
-                0x0000000008003dd8                _init
- .init          0x0000000008003ddc        0x8 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtn.o
+ .init          0x0000000008003cb0        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crti.o
+                0x0000000008003cb0                _init
+ .init          0x0000000008003cb4        0x8 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtn.o
  *(.fini)
- .fini          0x0000000008003de4        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crti.o
-                0x0000000008003de4                _fini
- .fini          0x0000000008003de8        0x8 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtn.o
-                0x0000000008003df0                . = ALIGN (0x4)
-                0x0000000008003df0                _etext = .
+ .fini          0x0000000008003cbc        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crti.o
+                0x0000000008003cbc                _fini
+ .fini          0x0000000008003cc0        0x8 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtn.o
+                0x0000000008003cc8                . = ALIGN (0x4)
+                0x0000000008003cc8                _etext = .
 
-.vfp11_veneer   0x0000000008003df0        0x0
- .vfp11_veneer  0x0000000008003df0        0x0 linker stubs
+.vfp11_veneer   0x0000000008003cc8        0x0
+ .vfp11_veneer  0x0000000008003cc8        0x0 linker stubs
 
-.v4_bx          0x0000000008003df0        0x0
- .v4_bx         0x0000000008003df0        0x0 linker stubs
+.v4_bx          0x0000000008003cc8        0x0
+ .v4_bx         0x0000000008003cc8        0x0 linker stubs
 
-.iplt           0x0000000008003df0        0x0
- .iplt          0x0000000008003df0        0x0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
+.iplt           0x0000000008003cc8        0x0
+ .iplt          0x0000000008003cc8        0x0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
 
-.rodata         0x0000000008003df0       0x4c
-                0x0000000008003df0                . = ALIGN (0x4)
+.rodata         0x0000000008003cc8       0x4c
+                0x0000000008003cc8                . = ALIGN (0x4)
  *(.rodata)
- .rodata        0x0000000008003df0       0x12 HAL_Driver/Src/stm32f1xx_hal_rcc.o
- *fill*         0x0000000008003e02        0x2 
- .rodata        0x0000000008003e04       0x12 HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o
- *fill*         0x0000000008003e16        0x2 
- .rodata        0x0000000008003e18        0x5 src/main.o
- *fill*         0x0000000008003e1d        0x3 
- .rodata        0x0000000008003e20       0x18 src/system_stm32f1xx.o
-                0x0000000008003e20                AHBPrescTable
-                0x0000000008003e30                APBPrescTable
+ .rodata        0x0000000008003cc8       0x12 HAL_Driver/Src/stm32f1xx_hal_rcc.o
+ *fill*         0x0000000008003cda        0x2 
+ .rodata        0x0000000008003cdc       0x12 HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o
+ *fill*         0x0000000008003cee        0x2 
+ .rodata        0x0000000008003cf0        0x5 src/main.o
+ *fill*         0x0000000008003cf5        0x3 
+ .rodata        0x0000000008003cf8       0x18 src/system_stm32f1xx.o
+                0x0000000008003cf8                AHBPrescTable
+                0x0000000008003d08                APBPrescTable
  *(.rodata*)
  .rodata._global_impure_ptr
-                0x0000000008003e38        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-impure.o)
-                0x0000000008003e38                _global_impure_ptr
-                0x0000000008003e3c                . = ALIGN (0x4)
+                0x0000000008003d10        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-impure.o)
+                0x0000000008003d10                _global_impure_ptr
+                0x0000000008003d14                . = ALIGN (0x4)
 
-.rel.dyn        0x0000000008003e3c        0x0
- .rel.iplt      0x0000000008003e3c        0x0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
+.rel.dyn        0x0000000008003d14        0x0
+ .rel.iplt      0x0000000008003d14        0x0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
 
-.ARM.extab      0x0000000008003e3c        0x0
-                0x0000000008003e3c                . = ALIGN (0x4)
+.ARM.extab      0x0000000008003d14        0x0
+                0x0000000008003d14                . = ALIGN (0x4)
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x0000000008003e3c                . = ALIGN (0x4)
+                0x0000000008003d14                . = ALIGN (0x4)
 
-.ARM            0x0000000008003e3c        0x0
-                0x0000000008003e3c                . = ALIGN (0x4)
-                0x0000000008003e3c                __exidx_start = .
+.ARM            0x0000000008003d14        0x0
+                0x0000000008003d14                . = ALIGN (0x4)
+                0x0000000008003d14                __exidx_start = .
  *(.ARM.exidx*)
-                0x0000000008003e3c                __exidx_end = .
-                0x0000000008003e3c                . = ALIGN (0x4)
+                0x0000000008003d14                __exidx_end = .
+                0x0000000008003d14                . = ALIGN (0x4)
 
-.preinit_array  0x0000000008003e3c        0x0
-                0x0000000008003e3c                . = ALIGN (0x4)
-                0x0000000008003e3c                PROVIDE (__preinit_array_start = .)
+.preinit_array  0x0000000008003d14        0x0
+                0x0000000008003d14                . = ALIGN (0x4)
+                0x0000000008003d14                PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
-                0x0000000008003e3c                PROVIDE (__preinit_array_end = .)
-                0x0000000008003e3c                . = ALIGN (0x4)
+                0x0000000008003d14                PROVIDE (__preinit_array_end = .)
+                0x0000000008003d14                . = ALIGN (0x4)
 
-.init_array     0x0000000008003e3c        0x8
-                0x0000000008003e3c                . = ALIGN (0x4)
-                0x0000000008003e3c                PROVIDE (__init_array_start = .)
+.init_array     0x0000000008003d14        0x8
+                0x0000000008003d14                . = ALIGN (0x4)
+                0x0000000008003d14                PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  .init_array.00000
-                0x0000000008003e3c        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__call_atexit.o)
+                0x0000000008003d14        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__call_atexit.o)
  *(.init_array*)
- .init_array    0x0000000008003e40        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
-                0x0000000008003e44                PROVIDE (__init_array_end = .)
-                0x0000000008003e44                . = ALIGN (0x4)
+ .init_array    0x0000000008003d18        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
+                0x0000000008003d1c                PROVIDE (__init_array_end = .)
+                0x0000000008003d1c                . = ALIGN (0x4)
 
-.fini_array     0x0000000008003e44        0x4
-                0x0000000008003e44                . = ALIGN (0x4)
-                0x0000000008003e44                PROVIDE (__fini_array_start = .)
+.fini_array     0x0000000008003d1c        0x4
+                0x0000000008003d1c                . = ALIGN (0x4)
+                0x0000000008003d1c                PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x0000000008003e44        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
-                0x0000000008003e48                PROVIDE (__fini_array_end = .)
-                0x0000000008003e48                . = ALIGN (0x4)
-                0x0000000008003e48                _sidata = LOADADDR (.data)
+ .fini_array    0x0000000008003d1c        0x4 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
+                0x0000000008003d20                PROVIDE (__fini_array_end = .)
+                0x0000000008003d20                . = ALIGN (0x4)
+                0x0000000008003d20                _sidata = LOADADDR (.data)
 
-.data           0x0000000020000000      0x45c load address 0x0000000008003e48
+.data           0x0000000020000000      0x45c load address 0x0000000008003d20
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
@@ -10780,20 +10797,17 @@ LOAD /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1
                 0x0000000020000000                uwTickPrio
                 0x0000000020000004                uwTickFreq
  *fill*         0x0000000020000005        0x3 
- .data          0x0000000020000008        0xc src/main.o
-                0x0000000020000008                threshold
-                0x000000002000000c                lower_limit
-                0x0000000020000010                upper_limit
- .data          0x0000000020000014       0x12 src/nRF24L01.o
-                0x0000000020000014                rf_configuration
-                0x0000000020000015                address_length
-                0x0000000020000018                address_tx_write_command
-                0x0000000020000020                address_rx_write_command
- *fill*         0x0000000020000026        0x2 
- .data          0x0000000020000028        0x4 src/system_stm32f1xx.o
-                0x0000000020000028                SystemCoreClock
+ .data          0x0000000020000008       0x22 src/nRF24L01.o
+                0x0000000020000008                rf_configuration
+                0x0000000020000009                address_length
+                0x000000002000000c                address_tx_write_command
+                0x0000000020000014                address_rx_write_command
+                0x000000002000001c                address_tx_write_shutter_command
+                0x0000000020000024                address_rx_write_shutter_command
+ *fill*         0x000000002000002a        0x2 
+ .data          0x000000002000002c        0x4 src/system_stm32f1xx.o
+                0x000000002000002c                SystemCoreClock
  *(.data*)
- *fill*         0x000000002000002c        0x4 
  .data.impure_data
                 0x0000000020000030      0x428 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-impure.o)
  .data.__atexit_recursive_mutex
@@ -10802,73 +10816,72 @@ LOAD /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1
                 0x000000002000045c                . = ALIGN (0x4)
                 0x000000002000045c                _edata = .
 
-.igot.plt       0x000000002000045c        0x0 load address 0x00000000080042a4
+.igot.plt       0x000000002000045c        0x0 load address 0x000000000800417c
  .igot.plt      0x000000002000045c        0x0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
                 0x000000002000045c                . = ALIGN (0x4)
 
-.bss            0x000000002000045c      0x234 load address 0x00000000080042a4
+.bss            0x000000002000045c      0x228 load address 0x000000000800417c
                 0x000000002000045c                _sbss = .
                 0x000000002000045c                __bss_start__ = _sbss
  *(.bss)
  .bss           0x000000002000045c       0x1c /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
  .bss           0x0000000020000478        0x1 HAL_Driver/Src/stm32f1xx_hal_spi_ex.o
                 0x0000000020000478                uCRCErrorWorkaroundCheck
- *fill*         0x0000000020000479        0x3 
- .bss           0x000000002000047c        0x8 src/main.o
-                0x000000002000047c                mode
-                0x000000002000047d                data_ready
-                0x0000000020000480                last_lightness
- .bss           0x0000000020000484        0x4 src/ws2812b.o
-                0x0000000020000484                encoded_color
+ .bss           0x0000000020000479        0x2 src/main.o
+                0x0000000020000479                mode
+                0x000000002000047a                data_ready
+ *fill*         0x000000002000047b        0x1 
+ .bss           0x000000002000047c        0x4 src/ws2812b.o
+                0x000000002000047c                encoded_color
  *(.bss*)
  *(COMMON)
- COMMON         0x0000000020000488        0x4 HAL_Driver/Src/stm32f1xx_hal.o
-                0x0000000020000488                uwTick
- COMMON         0x000000002000048c       0x40 src/main.o
-                0x000000002000048c                reading
-                0x0000000020000490                adc
-                0x00000000200004c0                hsl
- COMMON         0x00000000200004cc       0x1e src/nRF24L01.o
-                0x00000000200004cc                last_status_data
-                0x00000000200004ce                gpio_chip_select
-                0x00000000200004d0                status_register
-                0x00000000200004d4                gpio_handler
-                0x00000000200004d8                payload
-                0x00000000200004e0                spi
-                0x00000000200004e4                dump_data
- *fill*         0x00000000200004ea        0x2 
- COMMON         0x00000000200004ec       0xf4 src/spi.o
-                0x00000000200004ec                hspi2
-                0x0000000020000544                hspi1
-                0x000000002000059c                hdma_spi1_tx
- COMMON         0x00000000200005e0       0x8c src/ws2812b.o
-                0x00000000200005e0                spi_handle
-                0x00000000200005e4                encoded_color_data
-                0x0000000020000654                diodes_colors
- COMMON         0x000000002000066c       0x21 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
-                0x000000002000066c                __lock___atexit_recursive_mutex
-                0x0000000020000670                __lock___arc4random_mutex
-                0x0000000020000674                __lock___env_recursive_mutex
-                0x0000000020000678                __lock___sinit_recursive_mutex
-                0x000000002000067c                __lock___malloc_recursive_mutex
-                0x0000000020000680                __lock___at_quick_exit_mutex
-                0x0000000020000684                __lock___dd_hash_mutex
-                0x0000000020000688                __lock___tz_mutex
-                0x000000002000068c                __lock___sfp_recursive_mutex
-                0x0000000020000690                . = ALIGN (0x4)
- *fill*         0x000000002000068d        0x3 
-                0x0000000020000690                _ebss = .
-                0x0000000020000690                __bss_end__ = _ebss
+ COMMON         0x0000000020000480        0x4 HAL_Driver/Src/stm32f1xx_hal.o
+                0x0000000020000480                uwTick
+ COMMON         0x0000000020000484       0x3c src/main.o
+                0x0000000020000484                adc
+                0x00000000200004b4                colorInterpolation
+ COMMON         0x00000000200004c0       0x1e src/nRF24L01.o
+                0x00000000200004c0                last_status_data
+                0x00000000200004c2                gpio_chip_select
+                0x00000000200004c4                status_register
+                0x00000000200004c8                gpio_handler
+                0x00000000200004cc                payload
+                0x00000000200004d4                spi
+                0x00000000200004d8                dump_data
+ *fill*         0x00000000200004de        0x2 
+ COMMON         0x00000000200004e0       0xf4 src/spi.o
+                0x00000000200004e0                hspi2
+                0x0000000020000538                hspi1
+                0x0000000020000590                hdma_spi1_tx
+ COMMON         0x00000000200005d4       0x8c src/ws2812b.o
+                0x00000000200005d4                spi_handle
+                0x00000000200005d8                encoded_color_data
+                0x0000000020000648                diodes_colors
+ COMMON         0x0000000020000660       0x21 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
+                0x0000000020000660                __lock___atexit_recursive_mutex
+                0x0000000020000664                __lock___arc4random_mutex
+                0x0000000020000668                __lock___env_recursive_mutex
+                0x000000002000066c                __lock___sinit_recursive_mutex
+                0x0000000020000670                __lock___malloc_recursive_mutex
+                0x0000000020000674                __lock___at_quick_exit_mutex
+                0x0000000020000678                __lock___dd_hash_mutex
+                0x000000002000067c                __lock___tz_mutex
+                0x0000000020000680                __lock___sfp_recursive_mutex
+                0x0000000020000684                . = ALIGN (0x4)
+ *fill*         0x0000000020000681        0x3 
+                0x0000000020000684                _ebss = .
+                0x0000000020000684                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x0000000020000690      0x400 load address 0x00000000080042a4
-                0x0000000020000690                . = ALIGN (0x8)
-                0x0000000020000690                PROVIDE (end = .)
+                0x0000000020000684      0x404 load address 0x000000000800417c
+                0x0000000020000688                . = ALIGN (0x8)
+ *fill*         0x0000000020000684        0x4 
+                0x0000000020000688                PROVIDE (end = .)
                 [!provide]                        PROVIDE (_end = .)
-                0x0000000020000690                . = (. + _Min_Heap_Size)
-                0x0000000020000a90                . = (. + _Min_Stack_Size)
- *fill*         0x0000000020000690      0x400 
-                0x0000000020000a90                . = ALIGN (0x8)
+                0x0000000020000688                . = (. + _Min_Heap_Size)
+                0x0000000020000a88                . = (. + _Min_Stack_Size)
+ *fill*         0x0000000020000688      0x400 
+                0x0000000020000a88                . = ALIGN (0x8)
 
 /DISCARD/
  libc.a(*)
@@ -10950,7 +10963,7 @@ LOAD /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1
                 0x0000000000000610       0x1d /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtn.o
 OUTPUT(HelloWorld.elf elf32-littlearm)
 
-.debug_info     0x0000000000000000    0x132ce
+.debug_info     0x0000000000000000    0x13454
  .debug_info    0x0000000000000000      0xf0a HAL_Driver/Src/stm32f1xx_hal.o
  .debug_info    0x0000000000000f0a     0x1472 HAL_Driver/Src/stm32f1xx_hal_adc.o
  .debug_info    0x000000000000237c     0x120c HAL_Driver/Src/stm32f1xx_hal_adc_ex.o
@@ -10964,15 +10977,15 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_info    0x000000000000ab97      0xe8b HAL_Driver/Src/stm32f1xx_hal_spi_ex.o
  .debug_info    0x000000000000ba22      0xb8f src/dma.o
  .debug_info    0x000000000000c5b1      0xcba src/gpio.o
- .debug_info    0x000000000000d26b     0x17d6 src/main.o
- .debug_info    0x000000000000ea41     0x1201 src/nRF24L01.o
- .debug_info    0x000000000000fc42     0x1094 src/spi.o
- .debug_info    0x0000000000010cd6      0x9bb src/stm32f1xx_it.o
- .debug_info    0x0000000000011691      0xc59 src/system_stm32f1xx.o
- .debug_info    0x00000000000122ea      0xfc2 src/ws2812b.o
- .debug_info    0x00000000000132ac       0x22 startup/startup_stm32.o
+ .debug_info    0x000000000000d26b     0x1884 src/main.o
+ .debug_info    0x000000000000eaef     0x12d9 src/nRF24L01.o
+ .debug_info    0x000000000000fdc8     0x1094 src/spi.o
+ .debug_info    0x0000000000010e5c      0x9bb src/stm32f1xx_it.o
+ .debug_info    0x0000000000011817      0xc59 src/system_stm32f1xx.o
+ .debug_info    0x0000000000012470      0xfc2 src/ws2812b.o
+ .debug_info    0x0000000000013432       0x22 startup/startup_stm32.o
 
-.debug_abbrev   0x0000000000000000     0x2f64
+.debug_abbrev   0x0000000000000000     0x2f73
  .debug_abbrev  0x0000000000000000      0x2f5 HAL_Driver/Src/stm32f1xx_hal.o
  .debug_abbrev  0x00000000000002f5      0x26f HAL_Driver/Src/stm32f1xx_hal_adc.o
  .debug_abbrev  0x0000000000000564      0x28f HAL_Driver/Src/stm32f1xx_hal_adc_ex.o
@@ -10986,15 +10999,15 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_abbrev  0x0000000000001af0      0x218 HAL_Driver/Src/stm32f1xx_hal_spi_ex.o
  .debug_abbrev  0x0000000000001d08      0x1fb src/dma.o
  .debug_abbrev  0x0000000000001f03      0x206 src/gpio.o
- .debug_abbrev  0x0000000000002109      0x2ce src/main.o
- .debug_abbrev  0x00000000000023d7      0x2b4 src/nRF24L01.o
- .debug_abbrev  0x000000000000268b      0x244 src/spi.o
- .debug_abbrev  0x00000000000028cf      0x1e1 src/stm32f1xx_it.o
- .debug_abbrev  0x0000000000002ab0      0x228 src/system_stm32f1xx.o
- .debug_abbrev  0x0000000000002cd8      0x27a src/ws2812b.o
- .debug_abbrev  0x0000000000002f52       0x12 startup/startup_stm32.o
+ .debug_abbrev  0x0000000000002109      0x2dd src/main.o
+ .debug_abbrev  0x00000000000023e6      0x2b4 src/nRF24L01.o
+ .debug_abbrev  0x000000000000269a      0x244 src/spi.o
+ .debug_abbrev  0x00000000000028de      0x1e1 src/stm32f1xx_it.o
+ .debug_abbrev  0x0000000000002abf      0x228 src/system_stm32f1xx.o
+ .debug_abbrev  0x0000000000002ce7      0x27a src/ws2812b.o
+ .debug_abbrev  0x0000000000002f61       0x12 startup/startup_stm32.o
 
-.debug_aranges  0x0000000000000000      0x968
+.debug_aranges  0x0000000000000000      0x9a0
  .debug_aranges
                 0x0000000000000000       0xd0 HAL_Driver/Src/stm32f1xx_hal.o
  .debug_aranges
@@ -11022,21 +11035,21 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_aranges
                 0x0000000000000748       0x20 src/gpio.o
  .debug_aranges
-                0x0000000000000768       0x58 src/main.o
+                0x0000000000000768       0x68 src/main.o
  .debug_aranges
-                0x00000000000007c0       0xc0 src/nRF24L01.o
+                0x00000000000007d0       0xe8 src/nRF24L01.o
  .debug_aranges
-                0x0000000000000880       0x38 src/spi.o
+                0x00000000000008b8       0x38 src/spi.o
  .debug_aranges
-                0x00000000000008b8       0x28 src/stm32f1xx_it.o
+                0x00000000000008f0       0x28 src/stm32f1xx_it.o
  .debug_aranges
-                0x00000000000008e0       0x28 src/system_stm32f1xx.o
+                0x0000000000000918       0x28 src/system_stm32f1xx.o
  .debug_aranges
-                0x0000000000000908       0x38 src/ws2812b.o
+                0x0000000000000940       0x38 src/ws2812b.o
  .debug_aranges
-                0x0000000000000940       0x28 startup/startup_stm32.o
+                0x0000000000000978       0x28 startup/startup_stm32.o
 
-.debug_ranges   0x0000000000000000      0x830
+.debug_ranges   0x0000000000000000      0x868
  .debug_ranges  0x0000000000000000       0xc0 HAL_Driver/Src/stm32f1xx_hal.o
  .debug_ranges  0x00000000000000c0       0xe0 HAL_Driver/Src/stm32f1xx_hal_adc.o
  .debug_ranges  0x00000000000001a0       0x70 HAL_Driver/Src/stm32f1xx_hal_adc_ex.o
@@ -11050,15 +11063,15 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_ranges  0x0000000000000660       0x18 HAL_Driver/Src/stm32f1xx_hal_spi_ex.o
  .debug_ranges  0x0000000000000678       0x10 src/dma.o
  .debug_ranges  0x0000000000000688       0x10 src/gpio.o
- .debug_ranges  0x0000000000000698       0x48 src/main.o
- .debug_ranges  0x00000000000006e0       0xb0 src/nRF24L01.o
- .debug_ranges  0x0000000000000790       0x28 src/spi.o
- .debug_ranges  0x00000000000007b8       0x18 src/stm32f1xx_it.o
- .debug_ranges  0x00000000000007d0       0x18 src/system_stm32f1xx.o
- .debug_ranges  0x00000000000007e8       0x28 src/ws2812b.o
- .debug_ranges  0x0000000000000810       0x20 startup/startup_stm32.o
+ .debug_ranges  0x0000000000000698       0x58 src/main.o
+ .debug_ranges  0x00000000000006f0       0xd8 src/nRF24L01.o
+ .debug_ranges  0x00000000000007c8       0x28 src/spi.o
+ .debug_ranges  0x00000000000007f0       0x18 src/stm32f1xx_it.o
+ .debug_ranges  0x0000000000000808       0x18 src/system_stm32f1xx.o
+ .debug_ranges  0x0000000000000820       0x28 src/ws2812b.o
+ .debug_ranges  0x0000000000000848       0x20 startup/startup_stm32.o
 
-.debug_macro    0x0000000000000000    0x19ca4
+.debug_macro    0x0000000000000000    0x19c9e
  .debug_macro   0x0000000000000000      0x426 HAL_Driver/Src/stm32f1xx_hal.o
  .debug_macro   0x0000000000000426      0xa6c HAL_Driver/Src/stm32f1xx_hal.o
  .debug_macro   0x0000000000000e92      0x224 HAL_Driver/Src/stm32f1xx_hal.o
@@ -11148,15 +11161,15 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_macro   0x0000000000017ec4      0x41b src/gpio.o
  .debug_macro   0x00000000000182df      0x45f src/main.o
  .debug_macro   0x000000000001873e       0x22 src/main.o
- .debug_macro   0x0000000000018760       0xac src/main.o
- .debug_macro   0x000000000001880c      0x42a src/nRF24L01.o
- .debug_macro   0x0000000000018c36      0x41b src/spi.o
- .debug_macro   0x0000000000019051      0x40c src/stm32f1xx_it.o
- .debug_macro   0x000000000001945d      0x408 src/system_stm32f1xx.o
- .debug_macro   0x0000000000019865      0x405 src/ws2812b.o
- .debug_macro   0x0000000000019c6a       0x3a src/ws2812b.o
+ .debug_macro   0x0000000000018760       0xa6 src/main.o
+ .debug_macro   0x0000000000018806      0x42a src/nRF24L01.o
+ .debug_macro   0x0000000000018c30      0x41b src/spi.o
+ .debug_macro   0x000000000001904b      0x40c src/stm32f1xx_it.o
+ .debug_macro   0x0000000000019457      0x408 src/system_stm32f1xx.o
+ .debug_macro   0x000000000001985f      0x405 src/ws2812b.o
+ .debug_macro   0x0000000000019c64       0x3a src/ws2812b.o
 
-.debug_line     0x0000000000000000     0xd674
+.debug_line     0x0000000000000000     0xd733
  .debug_line    0x0000000000000000      0xae1 HAL_Driver/Src/stm32f1xx_hal.o
  .debug_line    0x0000000000000ae1      0xe52 HAL_Driver/Src/stm32f1xx_hal_adc.o
  .debug_line    0x0000000000001933      0xc9a HAL_Driver/Src/stm32f1xx_hal_adc_ex.o
@@ -11170,15 +11183,15 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_line    0x0000000000007cb6      0x961 HAL_Driver/Src/stm32f1xx_hal_spi_ex.o
  .debug_line    0x0000000000008617      0x963 src/dma.o
  .debug_line    0x0000000000008f7a      0x980 src/gpio.o
- .debug_line    0x00000000000098fa      0xae9 src/main.o
- .debug_line    0x000000000000a3e3      0xb2f src/nRF24L01.o
- .debug_line    0x000000000000af12      0x9dd src/spi.o
- .debug_line    0x000000000000b8ef      0x97b src/stm32f1xx_it.o
- .debug_line    0x000000000000c26a      0x969 src/system_stm32f1xx.o
- .debug_line    0x000000000000cbd3      0xa25 src/ws2812b.o
- .debug_line    0x000000000000d5f8       0x7c startup/startup_stm32.o
+ .debug_line    0x00000000000098fa      0xb13 src/main.o
+ .debug_line    0x000000000000a40d      0xbc4 src/nRF24L01.o
+ .debug_line    0x000000000000afd1      0x9dd src/spi.o
+ .debug_line    0x000000000000b9ae      0x97b src/stm32f1xx_it.o
+ .debug_line    0x000000000000c329      0x969 src/system_stm32f1xx.o
+ .debug_line    0x000000000000cc92      0xa25 src/ws2812b.o
+ .debug_line    0x000000000000d6b7       0x7c startup/startup_stm32.o
 
-.debug_str      0x0000000000000000    0x837c2
+.debug_str      0x0000000000000000    0x838e4
  .debug_str     0x0000000000000000    0x81087 HAL_Driver/Src/stm32f1xx_hal.o
                                       0x81414 (size before relaxing)
  .debug_str     0x0000000000081087      0x610 HAL_Driver/Src/stm32f1xx_hal_adc.o
@@ -11205,19 +11218,19 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
                                       0x8118e (size before relaxing)
  .debug_str     0x0000000000082fd2       0x35 src/gpio.o
                                       0x81209 (size before relaxing)
- .debug_str     0x0000000000083007      0x403 src/main.o
-                                      0x81c75 (size before relaxing)
- .debug_str     0x000000000008340a      0x23c src/nRF24L01.o
-                                      0x81727 (size before relaxing)
- .debug_str     0x0000000000083646       0x3e src/spi.o
+ .debug_str     0x0000000000083007      0x47c src/main.o
+                                      0x81cf0 (size before relaxing)
+ .debug_str     0x0000000000083483      0x2e5 src/nRF24L01.o
+                                      0x817cd (size before relaxing)
+ .debug_str     0x0000000000083768       0x3e src/spi.o
                                       0x81322 (size before relaxing)
- .debug_str     0x0000000000083684       0x4b src/stm32f1xx_it.o
+ .debug_str     0x00000000000837a6       0x4b src/stm32f1xx_it.o
                                       0x80d7f (size before relaxing)
- .debug_str     0x00000000000836cf       0x69 src/system_stm32f1xx.o
+ .debug_str     0x00000000000837f1       0x69 src/system_stm32f1xx.o
                                       0x80e2c (size before relaxing)
- .debug_str     0x0000000000083738       0x61 src/ws2812b.o
+ .debug_str     0x000000000008385a       0x61 src/ws2812b.o
                                       0x811c4 (size before relaxing)
- .debug_str     0x0000000000083799       0x29 startup/startup_stm32.o
+ .debug_str     0x00000000000838bb       0x29 startup/startup_stm32.o
                                          0x5b (size before relaxing)
 
 .comment        0x0000000000000000       0x7f
@@ -11242,7 +11255,7 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .comment       0x000000000000007f       0x80 src/system_stm32f1xx.o
  .comment       0x000000000000007f       0x80 src/ws2812b.o
 
-.debug_frame    0x0000000000000000     0x267c
+.debug_frame    0x0000000000000000     0x276c
  .debug_frame   0x0000000000000000      0x2fc HAL_Driver/Src/stm32f1xx_hal.o
  .debug_frame   0x00000000000002fc      0x40c HAL_Driver/Src/stm32f1xx_hal_adc.o
  .debug_frame   0x0000000000000708      0x204 HAL_Driver/Src/stm32f1xx_hal_adc_ex.o
@@ -11256,20 +11269,20 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_frame   0x0000000000001c74       0x5c HAL_Driver/Src/stm32f1xx_hal_spi_ex.o
  .debug_frame   0x0000000000001cd0       0x34 src/dma.o
  .debug_frame   0x0000000000001d04       0x34 src/gpio.o
- .debug_frame   0x0000000000001d38      0x138 src/main.o
- .debug_frame   0x0000000000001e70      0x2d0 src/nRF24L01.o
- .debug_frame   0x0000000000002140       0x90 src/spi.o
- .debug_frame   0x00000000000021d0       0x48 src/stm32f1xx_it.o
- .debug_frame   0x0000000000002218       0x58 src/system_stm32f1xx.o
- .debug_frame   0x0000000000002270       0xa4 src/ws2812b.o
- .debug_frame   0x0000000000002314       0x4c /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/libgcc.a(_arm_addsubsf3.o)
- .debug_frame   0x0000000000002360       0x38 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/libgcc.a(_arm_muldivsf3.o)
- .debug_frame   0x0000000000002398       0xc8 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/libgcc.a(_arm_cmpsf2.o)
- .debug_frame   0x0000000000002460       0x24 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/libgcc.a(_arm_fixunssfsi.o)
- .debug_frame   0x0000000000002484       0x2c /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-init.o)
- .debug_frame   0x00000000000024b0       0x38 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-memset.o)
- .debug_frame   0x00000000000024e8       0x5c /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__call_atexit.o)
- .debug_frame   0x0000000000002544       0x20 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-atexit.o)
- .debug_frame   0x0000000000002564       0x34 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-fini.o)
- .debug_frame   0x0000000000002598       0xb0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
- .debug_frame   0x0000000000002648       0x34 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__atexit.o)
+ .debug_frame   0x0000000000001d38      0x180 src/main.o
+ .debug_frame   0x0000000000001eb8      0x378 src/nRF24L01.o
+ .debug_frame   0x0000000000002230       0x90 src/spi.o
+ .debug_frame   0x00000000000022c0       0x48 src/stm32f1xx_it.o
+ .debug_frame   0x0000000000002308       0x58 src/system_stm32f1xx.o
+ .debug_frame   0x0000000000002360       0xa4 src/ws2812b.o
+ .debug_frame   0x0000000000002404       0x4c /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/libgcc.a(_arm_addsubsf3.o)
+ .debug_frame   0x0000000000002450       0x38 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/libgcc.a(_arm_muldivsf3.o)
+ .debug_frame   0x0000000000002488       0xc8 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/libgcc.a(_arm_cmpsf2.o)
+ .debug_frame   0x0000000000002550       0x24 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/libgcc.a(_arm_fixunssfsi.o)
+ .debug_frame   0x0000000000002574       0x2c /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-init.o)
+ .debug_frame   0x00000000000025a0       0x38 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-memset.o)
+ .debug_frame   0x00000000000025d8       0x5c /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__call_atexit.o)
+ .debug_frame   0x0000000000002634       0x20 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-atexit.o)
+ .debug_frame   0x0000000000002654       0x34 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-fini.o)
+ .debug_frame   0x0000000000002688       0xb0 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-lock.o)
+ .debug_frame   0x0000000000002738       0x34 /home/warchlak/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/libc.a(lib_a-__atexit.o)
