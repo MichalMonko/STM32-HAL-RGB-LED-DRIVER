@@ -78,10 +78,10 @@ struct ColorInterpolationConfig {
 
 uint8_t calculateLightness(uint32_t reading)
 {
-	float calculatedValue = 0.3643f * reading - 109.2857f;
-	if (calculatedValue >= 240.0f)
+	float calculatedValue = -0.255*(float) reading + 306.00000f;
+	if (calculatedValue >= 250.0f)
 	{
-		return 200;
+		return 250;
 	}
 	else if(calculatedValue <= 0.0f)
 	{
@@ -92,7 +92,7 @@ uint8_t calculateLightness(uint32_t reading)
 
 uint8_t calculateShutterPos(uint32_t reading)
 {
-	float calculatedValue = 0.1111111f * reading - 11.1111111f;
+	float calculatedValue = -0.255*(float) reading + 306.00000f;
 	if (calculatedValue >= 100.0f)
 	{
 		return 100;
@@ -110,7 +110,7 @@ void set_point(struct PointRGB rgb,uint8_t R,uint8_t G,uint8_t B)
 }
 
 uint8_t * payload;
-uint8_t mode = RECEIVER_MODE;
+uint8_t mode = TRANSMITTER_MODE;
 uint8_t data_ready = 0;
 u_int32_t lower_limit = 100;
 u_int32_t upper_limit = 400;
@@ -140,7 +140,7 @@ int main(void)
 
   /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+  /* MCU Configuration------------------------------TRANSMITTER_MODE--------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
@@ -181,7 +181,7 @@ int main(void)
 		configure_as_transmitter();
 		HAL_ADC_Start(&adc);
 		payload[1] = 0x00; payload[2] = 0x00;
-		uint32_t delay;
+		uint32_t delay = 5000;
   while (1)
   {
 		write_tx_address();
@@ -189,8 +189,6 @@ int main(void)
 
 		uint32_t reading = HAL_ADC_GetValue(&adc);
 		uint8_t color = calculateLightness(reading);
-		if(color && color < 20)
-			color = 20;
 
 		payload[3] = color;
 		payload[4] = color;
@@ -202,7 +200,6 @@ int main(void)
 		HAL_Delay(1);
 		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
 
-		delay = isSendSuccess() ? 1000 : 1000;
 		rf_clear_interrupt_flags();
 		HAL_Delay(delay);
 
@@ -222,7 +219,6 @@ int main(void)
 		HAL_Delay(1);
 		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
 
-		delay = isSendSuccess() ? 1000:1000;
 		rf_clear_interrupt_flags();
 		HAL_Delay(delay);
 	}
@@ -230,32 +226,76 @@ int main(void)
 
 else
 	{
+	HAL_ADC_Start(&adc);
 	configure_as_receiver();
 	HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
 	rf_clear_interrupt_flags();
 	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
+	colorInterpolation.time = 5000;
+	colorInterpolation.timeStep = 20;
+
+	u_int8_t first_data = 1;
+	struct PointRGB old_point;
+	struct PointRGB new_point;
+
   while (1)
   {
 	  if(data_ready)
 	  {
-			HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
-			HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
-			read_payload();
-			rf_clear_interrupt_flags();
+//		HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
+		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_RESET);
+		read_payload();
+		rf_clear_interrupt_flags();
+
+		if(first_data)
+		{
+
+			for(int i =0; i < DIODES_NUMBER; i++)
+			{
+				set_diode_color(i, payload[3],payload[4],payload[5]);
+			}
+			first_data = 0;
+			old_point.r = payload[3]; old_point.g = payload[4]; old_point.b = payload[5];
+			send_data_to_spi();
+		}
+		else
+		{
+			new_point.r = payload[3]; new_point.g = payload[4]; new_point.b = payload[5];
+			float ar = (float)(new_point.r - old_point.r) / (float)colorInterpolation.time;
+			float ag = (float)(new_point.g - old_point.g) / (float)colorInterpolation.time;
+			float ab = (float)(new_point.b - old_point.b) / (float)colorInterpolation.time;
+			float br = 	(float) old_point.r;
+			float bg = (float) old_point.g;
+			float bb = (float) old_point.b;
+
+			float r,g,b = 0;
+
+			uint32_t current_time = 0;
+			while(current_time < colorInterpolation.time)
+			{
+				r = ar * (float) current_time + br;
+				g = ag * (float) current_time + bg;
+				b = ab * (float) current_time + bb;
+				current_time += colorInterpolation.timeStep;
 
 				for(int i =0; i < DIODES_NUMBER; i++)
 				{
-					set_diode_color(i, payload[3],payload[4] , payload[5] );
+					set_diode_color(i, (uint8_t) r,(uint8_t) g, (uint8_t) b );
 				}
 				send_data_to_spi();
+				HAL_Delay(colorInterpolation.timeStep);
 			}
-			HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
-			data_ready = 0;
-			HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+			old_point.r = (uint8_t) r; old_point.g = (uint8_t) g; old_point.b = (uint8_t) b;
+		}
+
+		data_ready = 0;
+//		HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+		HAL_GPIO_WritePin(GPIOA,RF_CHIP_ENABLE_Pin,GPIO_PIN_SET);
 	  }
   }
-}
+  }
+  }
 	
   /* USER CODE END 3 */
 /**

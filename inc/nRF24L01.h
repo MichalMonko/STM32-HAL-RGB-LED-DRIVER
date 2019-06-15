@@ -79,6 +79,8 @@ void flush_tx(void);
 void write_tx_shutter_address(void);
 void write_rx_shutter_address(void);
 
+uint8_t * encode_diode(uint8_t * encodedData,struct  DiodeColor * diode_color_struct);
+
 uint8_t isSendSuccess(void);
 
 #endif

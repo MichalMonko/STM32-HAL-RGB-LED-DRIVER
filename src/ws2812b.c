@@ -3,7 +3,7 @@
 
 SPI_HandleTypeDef * spi_handle;
 struct DiodeColor diodes_colors[DIODES_NUMBER];
-uint8_t encoded_color_data[DIODES_NUMBER * 9 + 2 * RESET_CODE_SIZE];
+uint8_t encoded_color_data[DIODES_NUMBER * 9 + 3] = {0};
 volatile uint32_t encoded_color = 0;
 
 void init_spi(SPI_HandleTypeDef * spih)
@@ -21,89 +21,86 @@ void set_diode_color(uint8_t index, uint8_t R, uint8_t G, uint8_t B)
 	}
 }
 
+void encode_diode(uint8_t * encodedData,struct  DiodeColor * diode_color_struct)
+{
+	int i = 8;
+	uint32_t color_code = 0;
+	for(uint8_t mask =0x80; mask; mask>>=1)
+	{
+		if(diode_color_struct->green & mask)
+		{
+			color_code |= (ONE_CODE << (i * 3 -1));
+		}
+		else
+		{
+			color_code |= (ZERO_CODE << (i * 3 -1));
+		}
+		i--;
+	}
+	color_code >>= 2;
+
+	*encodedData = (color_code >> 16)  & 0xff; encodedData++;
+	*encodedData = (color_code >> 8) & 0xff; encodedData++;
+	*encodedData= color_code & 0xff; encodedData++;
+
+	i = 8;
+	color_code = 0;
+	for(uint8_t mask =0x80; mask; mask>>=1)
+	{
+		if(diode_color_struct->red & mask)
+		{
+			color_code |= (ONE_CODE << (i * 3 -1));
+		}
+		else
+		{
+			color_code |= (ZERO_CODE << (i * 3 -1));
+		}
+		i--;
+	}
+	color_code >>= 2;
+
+	*encodedData = (color_code >> 16)  & 0xff; encodedData++;
+	*encodedData = (color_code >> 8) & 0xff; encodedData++;
+	*encodedData= color_code & 0xff; encodedData++;
+
+	i = 8;
+	color_code = 0;
+	for(uint8_t mask =0x80; mask; mask>>=1)
+	{
+		if(diode_color_struct->blue & mask)
+		{
+			color_code |= (ONE_CODE << (i * 3 -1));
+		}
+		else
+		{
+			color_code |= (ZERO_CODE << (i * 3 -1));
+		}
+		i--;
+	}
+	color_code >>= 2;
+
+	*encodedData = (color_code >> 16)  & 0xff; encodedData++;
+	*encodedData = (color_code >> 8) & 0xff; encodedData++;
+	*encodedData= color_code & 0xff; encodedData++;
+
+}
+
 void send_data_to_spi(void)
 {
-	encode_diodes();
-	HAL_SPI_Transmit(spi_handle,encoded_color_data,sizeof(encoded_color_data),HAL_MAX_DELAY);
-//	while(HAL_DMA_STATE_READY != HAL_DMA_GetState(spi_handle->hdmatx));
+		encode_diodes();
+		HAL_SPI_Transmit(spi_handle,encoded_color_data,sizeof(encoded_color_data),HAL_MAX_DELAY);
 }
+
 
 void encode_diodes(void)
 {
-	//RESTART CODE
-	int j=0;
-	for(j=0; j < RESET_CODE_SIZE; j++)
+	uint8_t * data = encoded_color_data;
+	*data = 0; data++;
+	struct DiodeColor * diodeColor = diodes_colors;
+	for(int i =0; i < DIODES_NUMBER; i++)
 	{
-		encoded_color_data[j] = 0x00;
-	}
-	
-for(int i =0;i<DIODES_NUMBER;i++)
-{
-	
-//Green
-for(uint8_t mask =0x80; mask; mask>>=1)
-{
-	if(diodes_colors[i].green & mask)
-	{
-		encoded_color |= ONE_CODE;
-	}
-	else
-	{
-		encoded_color |= ZERO_CODE;
-	}
-	if(mask >> 1)
-	encoded_color <<=3;
-}
-
-encoded_color_data[j++] = (uint8_t)(encoded_color >> 16);
-encoded_color_data[j++] = (uint8_t)(encoded_color >> 8);
-encoded_color_data[j++] = (uint8_t)encoded_color;
-
-encoded_color  = 0;
-//Red
-for(uint8_t mask =0x80; mask; mask>>=1)
-{
-	if(diodes_colors[i].red & mask)
-	{
-		encoded_color |= ONE_CODE;
-	}
-	else
-	{
-		encoded_color |= ZERO_CODE;
-	}
-	if(mask >> 1)
-	encoded_color <<=3;
-}
-
-encoded_color_data[j++] = (uint8_t)(encoded_color >> 16);
-encoded_color_data[j++] = (uint8_t)(encoded_color >> 8);
-encoded_color_data[j++] = (uint8_t)encoded_color;
-
-encoded_color  = 0x00;
-//Blue
-for(uint8_t mask =0x80; mask; mask>>=1)
-{
-	if(diodes_colors[i].blue & mask)
-	{
-		encoded_color |= ONE_CODE;
-	}
-	else
-	{
-		encoded_color |= ZERO_CODE;
-	}
-	if(mask >> 1)
-	encoded_color <<=3;
-}
-
-encoded_color_data[j++] = (uint8_t)(encoded_color >> 16);
-encoded_color_data[j++] = (uint8_t)(encoded_color >> 8);
-encoded_color_data[j++] = (uint8_t)encoded_color;
-
-}
-
-	//RESTART CODE
-	for(int i =0; i < RESET_CODE_SIZE; i++,j++)
-	{
-		encoded_color_data[i + j] = 0x00;
+			encode_diode(data,diodeColor);
+			diodeColor++;
+			data += 9;
 	}
 }

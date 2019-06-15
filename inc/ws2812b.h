@@ -2,6 +2,8 @@
 #define DIODES_NUMBER 8
 #define ONE_CODE 0x06
 #define ZERO_CODE 0x04
+//#define ONE_CODE 0x3
+//#define ZERO_CODE 0x01
 #define RESET_CODE_SIZE 20
 
 #ifndef __WS2812B_H_
@@ -15,7 +17,7 @@ struct DiodeColor {
 
 extern SPI_HandleTypeDef * spi_handle;
 extern struct DiodeColor diodes_colors[DIODES_NUMBER];
-extern uint8_t encoded_color_data[DIODES_NUMBER * 9 + 2 * RESET_CODE_SIZE];
+extern uint8_t encoded_color_data[DIODES_NUMBER * 9 + 3];
 
 void init_spi(SPI_HandleTypeDef * spih);
 uint32_t* encodeDiodeColor(struct DiodeColor * diode_color);
